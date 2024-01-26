@@ -41,6 +41,8 @@ spec:
             secretKeyRef:
               key: app-private-key
               name: ci-helper-app-secrets
+        - name: DEBUG
+          value: "true"
         image: quay.io/redhat-user-workloads-stage/psturc-tenant/ci-helper-app/ci-helper-app-brrf@sha256:1ca2e344cfb10b0f3c01ee6691ba0b25e88f69ac80ae86450c01cf7efaa80e66
         name: ci-helper-app
         ports:
