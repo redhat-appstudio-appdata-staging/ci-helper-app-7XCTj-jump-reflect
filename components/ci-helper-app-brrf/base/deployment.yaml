@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: ci-helper-app-brrf
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: ci-helper-app-brrf
+    app.kubernetes.io/part-of: ci-helper-app
+  name: ci-helper-app-brrf
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: ci-helper-app-brrf
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: ci-helper-app-brrf
+    spec:
+      containers:
+      - command:
+        - /ci-helper-app
+        env:
+        - name: GITHUB_APP_INTEGRATION_ID
+          valueFrom:
+            secretKeyRef:
+              key: app-id
+              name: ci-helper-app-secrets
+        - name: GITHUB_APP_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: webhook-secret
+              name: ci-helper-app-secrets
+        - name: GITHUB_APP_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: app-private-key
+              name: ci-helper-app-secrets
+        name: ci-helper-app
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 256Mi
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+      restartPolicy: Always
+      securityContext:
+        runAsNonRoot: true
+status: {}
